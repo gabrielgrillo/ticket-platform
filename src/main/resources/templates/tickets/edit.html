@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<div th:replace="~{fragments :: head}"></div>
+	<div th:replace="~{navbar :: navbar}">
+	</div>
+</head>
+<title>Edit a ticket</title>
+
+<body>
+	<div class="container">
+		<h1>
+			Tickets
+		</h1>
+
+		<hr>
+		<form id="ticket-form" th:object="${ticket}" th:action="@{/tickets/edit/{id} (id=${ticket.id})}" class="row g-3"
+			method="post">
+			<input type="hidden" th:field="*{id}" />
+
+			<div class="col-md-6">
+				<label for="name" class="form-label">Name</label>
+				<input type="text" class="form-control" id="name" placeholder="Name" th:field="*{name}"
+					th:errorClass="is-invalid">
+				<div th:if="${#fields.hasErrors('name')}" class="invalid-feedback">
+					<ul>
+						<li th:each="err : ${#fields.errors('name')}" th:text="${err}"></li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<label for="description" class="form-label">Description</label>
+				<input type="text" class="form-control" id="description" placeholder="Description"
+					th:field="*{description}" th:errorClass="is-invalid">
+				<div th:if="${#fields.hasErrors('description')}" class="invalid-feedback">
+					<ul>
+						<li th:each="err : ${#fields.errors('description')}" th:text="${err}"></li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-md-6">
+
+				<label for="categories" class="form-label">Categories</label>
+				<input type="hidden" class="form-control" id="category" placeholder="Categories"
+					th:field="*{categories}" th:errorClass="is-invalid">
+				<ul>
+					<li th:each="category : ${ticket.categories}" th:text="${category.category}"></li>
+				</ul>
+				<div th:if="${#fields.hasErrors('categories')}" class="invalid-feedback">
+					<ul>
+						<li th:each="err : ${#fields.errors('description')}" th:text="${err}"></li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-md-6">
+
+				<label for="assignedOperator" class="form-label">Operator</label>
+				<input type="hidden" class="form-control" id="assignedOperator" placeholder="Categories"
+					th:field="*{assignedOperator.id}" th:errorClass="is-invalid">
+				<ul>
+					<li th:text="*{assignedOperator}"></li>
+				</ul>
+				<div th:if="${#fields.hasErrors('assignedOperator.id')}" class="invalid-feedback">
+					<ul>
+						<li th:each="err : ${#fields.errors('assignedOperator.id')}" th:text="${err}"></li>
+					</ul>
+				</div>
+			</div>
+
+
+			<div class="col-12">
+				<button type="submit" class="btn btn-primary">Update</button>
+				<a class="btn btn-danger" th:href="@{|/tickets/show/${ticket.id}|}">Cancel</a>
+			</div>
+		</form>
+	</div>
+
+	<div th:replace="~{fragments :: scripts}"></div>
+</body>
+
+</html>

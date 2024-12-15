@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<div th:replace="~{fragments :: head}"></div>
+	<div th:replace="~{navbar :: navbar}">
+	</div>
+</head>
+
+<body>
+
+	<div class="container">
+		<h3>
+			Dashboard Tickets
+		</h3>
+		<div th:if="${successMessage != null}">
+			<div class="alert alert-success	alert-dismissible fade show" role="alert">
+				<span th:text="${successMessage}"></span>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+				</button>
+			</div>
+
+
+		</div>
+
+		<div class="container row g-3">
+			<a class="btn btn-primary col-md-2" sec:authorize="hasAuthority('ADMIN')" th:href="@{/tickets/create}">Create a ticket</a>
+			<form th:action="@{/tickets}" method="get" class="col-md-10">
+
+				<div class="input-group" sec:authorize="hasAuthority('ADMIN')">
+					<input name="keyword" th:value="${keyword}" class="form-control" type="search" placeholder="Search"
+						aria-label="Search">
+					<button class="btn btn-primary " type="submit" >Search</button>
+			</form>
+		</div>
+		<div class="container">
+			<table class="content table table-striped">
+				<thead>
+					<tr>
+						<th>
+							Name
+						</th>
+						<th>
+							Description
+						</th>
+						<th>
+							Category
+						</th>
+						<th>
+							Info
+						</th>
+						<th sec:authorize="hasAuthority('ADMIN')">
+							Delete
+						</th>
+
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr th:each="ticket : ${ticket}">
+
+						<td th:text="${ticket.name}"></td>
+						<td th:text="${ticket.description}"></td>
+						<td>
+							<ul>
+								<li th:each="category : ${ticket.categories}" th:text="${category.category}"></li>
+							</ul>
+						</td>
+						<td>
+							<a class="btn btn-primary" th:href="@{|tickets/show/${ticket.id}|}"><i
+									class="fas fa-regular fas fa-circle-info"></i></a>
+						</td>
+
+						<td>
+							<form action="#" th:action="@{'tickets/delete/{id}' (id=${ticket.id})}" method="post" sec:authorize="hasAuthority('ADMIN')">
+								<button class="btn btn-danger" type="submit" id="submitButton"
+									onclick="return confirm('are you sure?')">
+									<i class="fas fa solid fas fa-trash-can"></i>
+								</button>
+							</form>
+						</td>
+					</tr>
+
+				</tbody>
+		</div>
+		</table>
+
+
+	</div>
+
+	<div th:replace="~{fragments :: scripts}"></div>
+</body>
+
+</html>

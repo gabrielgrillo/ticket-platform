@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<div th:replace="~{fragments :: head}"></div>
+	<div th:replace="~{navbar :: navbar}">
+			</div>
+</head>
+<title>Notes</title>
+
+<body>
+	
+	<div class="container">
+		<h1>
+			Notes <span th:if="${edit}" th:text="${note.tickets.name}"></span>
+		</h1>
+		<hr>
+		<form id="note-form" th:object="${note}" th:action="${edit} ? @{|/notes/edit/${note.id}|} : @{/notes/create}" class="row g-3" method="post">
+			<input type="hidden" th:field="*{tickets}" id="tickets">
+
+			<div class="col-md-12">
+				<label for="notte" class="form-label">Note</label>
+				<textarea rows="3" class="form-control" id="note" placeholder="note" th:field="*{notte}"
+					th:errorClass="is-invalid"></textarea>
+			</div>
+			<div class="col-md-6">
+				<label for="createdAt" class="form-label">created</label>
+				<input type="date" class="form-control" id="createdAt" placeholder="created" th:field="*{createdAt}"
+					th:errorClass="is-invalid">
+				<div th:if="${#fields.hasErrors('createdAt')}" class="invalid-feedback">
+					<ul>
+						<li th:each="err : ${#fields.errors('createdAt')}" th:text="${err}"></li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<label for="updatedAt" class="form-label">updated</label>
+				<input type="date" class="form-control" id="updatedAt" placeholder="updatedAt" th:field="*{updatedAt}"
+					th:errorClass="is-invalid">
+				<div th:if="${#fields.hasErrors('updatedAt')}" class="invalid-feedback">
+					<ul>
+						<li th:each="err : ${#fields.errors('updatedAt')}" th:text="${err}"></li>
+					</ul>
+				</div>
+			</div>
+			
+			<div class="col-md-12">
+				<button type="submit" class="btn btn-primary">
+					<span>Save</span>
+				</button>
+				<a class="btn btn-danger" th:href="@{|/tickets/show/${note.tickets.id}|}">
+					<span>
+						Cancel
+					</span>
+				</a>
+			</div>
+	</div>
+	</form>
+
+	<div th:replace="~{fragments :: scripts}"></div>
+
+</body>
+
+</html>

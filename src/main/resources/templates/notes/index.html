@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<div th:replace="~{fragments :: head}"></div>
+	<title>Aggiungi nota</title>
+</head>
+
+<body>
+	<div th:replace="~{navbar :: navbar}"></div>
+	<div class="container">
+		<h2>Notes</h2>
+		<hr>
+
+		<div class="row">
+			<div class="col-4">
+				<form th:action="@{/notes/create}" method="post" id="note-form" th:object="${newnot}">
+					<div class="input-group mb-3">
+						<input id="note" th:field="*{note}" type="text" class="form-control">
+						<button class="btn btn-primary" type="submit">Add</button>
+					</div>
+					<div th:if="${#fields.hasErrors('note')}" class="invalid-feedback">
+						<ul>
+							<li th:each="err : ${#fields.errors('note')}" th:text="${err}">
+								
+							</li>
+						</ul>
+					</div>
+				</form>
+
+				<table class="content table table-striped" th:unless="${notes.isEmpty()}">
+					<thead>
+						<tr>
+							<th>
+								Name note
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each=" notes : ${notes}">
+							
+							<td th:text="${notes.note}">
+							</td>
+							
+							<td>
+								<form action="#" th:action="@{'notes/delete/{id}' (id=${notes.id})}" method="post">
+									<button class="btn btn-danger" type="submit" id="submitButton"
+										onclick="return confirm('are you sure?')">
+										<i class="fas fa solid fas fa-trash-can"></i>
+									</button>
+								</form>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div th:if="${notes.isEmpty()}">
+					there are no notes
+				</div>
+			</div>
+		</div>
+
+		<div th:replace="~{fragments :: scripts}"></div>
+</body>
+
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<div th:replace="~{fragments :: head}"></div>
+	<title th:text="${ticket.name}"></title>
+	<div th:replace="~{navbar :: navbar}">
+	</div>
+</head>
+
+<body>
+	<div class="container d-flex align-items-start flex-column bd-highlight mb-3" style="height: 90vh;">
+		<div class="container mb-auto" th:object="${ticket}">
+			<h1 th:text="*{name}">
+			</h1>
+			<hr>
+			<div class="row">
+				<div class="col-8">
+					<dl>
+						<dt>NAME</dt>
+						<dd th:text="*{name}">
+
+
+						<dt>DESCRIPTION</dt>
+						<dd th:text="*{description}">
+
+					</dl>
+				</div>
+
+				<div class="col-4">
+					<dl>
+						<dt>CATEGORIES</dt>
+						<dd>
+							<ul>
+								<li th:each="category : ${ticket.categories}" th:text="${category.category}"></li>
+							</ul>
+						</dd>
+						<dt>OPERATOR</dt>
+						<dd th:text="${ticket.assignedOperator}">
+
+					</dl>
+				</div>
+
+
+			</div>
+			<div th:if="*{!notes.isEmpty()}">
+				<table class="content table table-striped">
+					<thead>
+						<tr>
+							<th>
+								Note
+							</th>
+							<th>
+								Created
+							</th>
+							<th>
+								Created by
+							</th>
+							<th>
+								Updated
+							</th>
+							<th>
+								Edit
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="note : ${ticket.notes}">
+							<td style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
+								th:text="${note.notte}"></td>
+							<td th:text="${note.createdAt}"></td>
+							<td th:text="${note.createdBy}"></td>
+
+							<td th:text="${note.updatedAt}"></td>
+							<td>
+								<a class="btn btn-primary" th:href="@{|/notes/edit/${note.id}|}">
+									<i class="fas fa-edit"></i>
+								</a>
+							</td>
+						</tr>
+					</tbody>
+
+				</table>
+			</div>
+			<hr>
+			<div th:if="*{notes.isEmpty()}">
+				<h4>There aren't notes</h4>
+			</div>
+			<hr>
+			<div class="container mt-auto">
+				<div class="row">
+					<div class="col-md-3">
+						<a class="btn btn-primary" th:href="@{/tickets}" role="button">Back to tickets</a>
+
+					</div>
+					<div class="col-md-3" sec:authorize="hasAuthority('ADMIN')">
+						<a class="btn btn-primary" th:href="@{|/tickets/edit/${ticket.id}|}"> <i
+								class="fas fa-edit"></i>Edit ticket
+						</a>
+					</div>
+					<div class="col-md-3" sec:authorize="hasAuthority('ADMIN')">
+						<form id="delete-book" action="#" th:action="@{'/tickets/delete/{id}'(id=${ticket.id})}"
+							method="post">
+							<button class="btn btn-danger" type="submit" id="submitButton"
+								onclick="return confirm('Are you sure?')">
+								<i class="fas fa-trash-alt"></i>Delete ticket
+							</button>
+						</form>
+					</div>
+					<div class="col-md-3">
+						<a class="btn btn-primary" th:href="@{/tickets/{id}/notes (id=${ticket.id})}">
+							New note
+						</a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div th:replace="~{fragments :: scripts}"></div>
+</body>
+
+</html>
